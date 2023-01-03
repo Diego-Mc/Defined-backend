@@ -23,26 +23,26 @@ async function login(username, password) {
 //     await signup('mumu', '123', 'Mumu Maha')
 // })()
 
-async function signup({ username, password, fullname, imgUrl }) {
+async function signup({ username, password, fullName, imgUrl }) {
   const saltRounds = 10
 
   logger.debug(
-    `auth.service - signup with username: ${username}, fullname: ${fullname}`
+    `auth.service - signup with username: ${username}, fullName: ${fullName}`
   )
-  if (!username || !password || !fullname)
+  if (!username || !password || !fullName)
     return Promise.reject('Missing required signup information')
 
   const userExist = await userService.getByUsername(username)
   if (userExist) return Promise.reject('Username already taken')
 
   const hash = await bcrypt.hash(password, saltRounds)
-  return userService.add({ username, password: hash, fullname, imgUrl })
+  return userService.add({ username, password: hash, fullName, imgUrl })
 }
 
 function getLoginToken(user) {
   const userInfo = {
     _id: user._id,
-    fullname: user.fullname,
+    fullName: user.fullName,
     isAdmin: user.isAdmin,
   }
   return cryptr.encrypt(JSON.stringify(userInfo))
